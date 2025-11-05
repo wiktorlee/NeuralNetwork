@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="514pt" height="269pt" viewBox="0.00 0.00 514.00 269.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 265)">
+<title>XOR_Network</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-265 509.59,-265 509.59,4 -4,4"/>
+<text xml:space="preserve" text-anchor="middle" x="252.8" y="-239" font-family="Times,serif" font-size="20.00">Dwuwarstwowa sieć neuronowa – problem XOR</text>
+<g id="clust1" class="cluster">
+<title>cluster_input</title>
+<polygon fill="#eaf4fc" stroke="lightblue" points="0,-8 0,-221 129.89,-221 129.89,-8 0,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="64.95" y="-204.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Warstwa wejściowa</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_hidden</title>
+<polygon fill="#ecf9ec" stroke="lightgreen" points="199.89,-8 199.89,-221 304.91,-221 304.91,-8 199.89,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="252.4" y="-204.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Warstwa ukryta</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_output</title>
+<polygon fill="#fde8e8" stroke="lightcoral" points="374.91,-62 374.91,-167 505.59,-167 505.59,-62 374.91,-62"/>
+<text xml:space="preserve" text-anchor="middle" x="440.25" y="-150.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Warstwa wyjściowa</text>
+</g>
+<!-- x1 -->
+<g id="node1" class="node">
+<title>x1</title>
+<ellipse fill="white" stroke="white" cx="64.45" cy="-48" rx="32.4" ry="32.4"/>
+<text xml:space="preserve" text-anchor="middle" x="64.45" y="-43.8" font-family="Helvetica,sans-Serif" font-size="14.00">x₁</text>
+</g>
+<!-- h1 -->
+<g id="node3" class="node">
+<title>h1</title>
+<ellipse fill="white" stroke="white" cx="251.9" cy="-48" rx="32.4" ry="32.4"/>
+<text xml:space="preserve" text-anchor="middle" x="251.9" y="-43.8" font-family="Helvetica,sans-Serif" font-size="14.00">h₁</text>
+</g>
+<!-- x1&#45;&gt;h1 -->
+<g id="edge1" class="edge">
+<title>x1-&gt;h1</title>
+<path fill="none" stroke="black" d="M97.33,-48C127.81,-48 173.99,-48 207.75,-48"/>
+<polygon fill="black" stroke="black" points="207.61,-51.5 217.61,-48 207.61,-44.5 207.61,-51.5"/>
+</g>
+<!-- h2 -->
+<g id="node4" class="node">
+<title>h2</title>
+<ellipse fill="white" stroke="white" cx="251.9" cy="-156" rx="32.4" ry="32.4"/>
+<text xml:space="preserve" text-anchor="middle" x="251.9" y="-151.8" font-family="Helvetica,sans-Serif" font-size="14.00">h₂</text>
+</g>
+<!-- x1&#45;&gt;h2 -->
+<g id="edge2" class="edge">
+<title>x1-&gt;h2</title>
+<path fill="none" stroke="black" d="M92.81,-63.94C124.86,-82.6 178.11,-113.61 213.84,-134.42"/>
+<polygon fill="black" stroke="black" points="211.71,-137.23 222.12,-139.24 215.24,-131.18 211.71,-137.23"/>
+</g>
+<!-- x2 -->
+<g id="node2" class="node">
+<title>x2</title>
+<ellipse fill="white" stroke="white" cx="64.45" cy="-156" rx="32.4" ry="32.4"/>
+<text xml:space="preserve" text-anchor="middle" x="64.45" y="-151.8" font-family="Helvetica,sans-Serif" font-size="14.00">x₂</text>
+</g>
+<!-- x2&#45;&gt;h1 -->
+<g id="edge3" class="edge">
+<title>x2-&gt;h1</title>
+<path fill="none" stroke="black" d="M92.81,-140.06C124.86,-121.4 178.11,-90.39 213.84,-69.58"/>
+<polygon fill="black" stroke="black" points="215.24,-72.82 222.12,-64.76 211.71,-66.77 215.24,-72.82"/>
+</g>
+<!-- x2&#45;&gt;h2 -->
+<g id="edge4" class="edge">
+<title>x2-&gt;h2</title>
+<path fill="none" stroke="black" d="M97.33,-156C127.81,-156 173.99,-156 207.75,-156"/>
+<polygon fill="black" stroke="black" points="207.61,-159.5 217.61,-156 207.61,-152.5 207.61,-159.5"/>
+</g>
+<!-- y -->
+<g id="node5" class="node">
+<title>y</title>
+<ellipse fill="white" stroke="white" cx="439.75" cy="-102" rx="32.4" ry="32.4"/>
+<text xml:space="preserve" text-anchor="middle" x="439.75" y="-97.8" font-family="Helvetica,sans-Serif" font-size="14.00">y</text>
+</g>
+<!-- h1&#45;&gt;y -->
+<g id="edge5" class="edge">
+<title>h1-&gt;y</title>
+<path fill="none" stroke="black" d="M283.18,-56.8C314.27,-65.83 362.88,-79.95 397.48,-90.01"/>
+<polygon fill="black" stroke="black" points="396.15,-93.27 406.73,-92.7 398.1,-86.54 396.15,-93.27"/>
+</g>
+<!-- h2&#45;&gt;y -->
+<g id="edge6" class="edge">
+<title>h2-&gt;y</title>
+<path fill="none" stroke="black" d="M283.18,-147.2C314.27,-138.17 362.88,-124.05 397.48,-113.99"/>
+<polygon fill="black" stroke="black" points="398.1,-117.46 406.73,-111.3 396.15,-110.73 398.1,-117.46"/>
+</g>
+</g>
+</svg>
