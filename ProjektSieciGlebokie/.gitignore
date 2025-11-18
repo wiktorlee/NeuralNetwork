@@ -1,0 +1,45 @@
+# Token API Kaggle - NIGDY nie commituj!
+kaggle.json
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dane (jeśli będziesz kopiować lokalnie)
+data/
+*.zip
+
+# Wykresy i obrazy wygenerowane
+*.png
+*.jpg
+*.pdf
+
+# Modele zapisane
+*.h5
+*.pkl
+*.pt
+*.pth
+models/
+
+# Logi
+*.log
+logs/
+
+# Systemowe
+.DS_Store
+Thumbs.db
+
