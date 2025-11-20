@@ -18,3 +18,4 @@ matplotlib>=3.5.0
 # Opcjonalne - przydatne do analizy danych
 pandas>=1.4.0
 
+
