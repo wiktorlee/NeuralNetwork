@@ -1,5 +1,11 @@
 # Etapy projektu - Klasyfikacja flag państw
 
+## Pierwsze uruchomienie – krótkie instrukcje
+1. Utwórz i aktywuj środowisko: `python -m venv .venv` oraz `.\.venv\Scripts\activate`.
+2. Zainstaluj zależności: `pip install -r requirements.txt`.
+3. Uruchom `test_etap1.py`, aby pobrać dane i potwierdzić, że pipeline działa (to normalne, że pobieranie zajmuje ~500 MB i chwilę trwa).
+4. Uruchom `model.py` (lub `test_model.py`), żeby sprawdzić, czy model buduje się poprawnie.
+
 ## Cel projektu
 Zbudowanie systemu klasyfikacji obrazów flag państw świata używając sieci neuronowych głębokich. Zbiór danych zawiera 195 krajów, po około 1001 obrazów na kraj.
 
@@ -28,7 +34,7 @@ System zdolny do klasyfikacji flag z dokładnością powyżej 50% na zbiorze tes
 
 ---
 
-## ETAP 2: Projektowanie i implementacja modelu [NASTĘPNY - WAŻNY]
+## ETAP 2: Projektowanie i implementacja modelu [ZREALIZOWANY]
 
 ### Zadania:
 - Zaprojektowanie architektury CNN odpowiedniej dla 195 klas
@@ -42,8 +48,9 @@ System zdolny do klasyfikacji flag z dokładnością powyżej 50% na zbiorze tes
 - Kompilacja modelu z odpowiednim optimizer i loss function
 - Test czy model się kompiluje i ma poprawny kształt wyjściowy
 
-### Pliki do stworzenia:
-- `model.py` - definicja architektury CNN
+### Pliki:
+- `model.py` - definicja architektury CNN + sekcja testowa w `__main__`
+- `test_model.py` - sanity check kształtu i softmaxu
 
 ### Kryteria sukcesu:
 - Model kompiluje się bez błędów
@@ -165,5 +172,5 @@ ETAP 5 i 6 są ważne dla jakości projektu, ale MVP można zrealizować bez opt
 ## Aktualny status
 
 - ETAP 1: Zakończony
-- ETAP 2: Do realizacji
+- ETAP 2: Zakończony
 - ETAP 3-6: W kolejce
