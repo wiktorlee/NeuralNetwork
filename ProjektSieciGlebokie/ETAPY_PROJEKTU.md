@@ -1,10 +1,28 @@
 # Etapy projektu - Klasyfikacja flag państw
 
 ## Pierwsze uruchomienie – krótkie instrukcje
+
+### Lokalnie (na własnym komputerze):
 1. Utwórz i aktywuj środowisko: `python -m venv .venv` oraz `.\.venv\Scripts\activate`.
 2. Zainstaluj zależności: `pip install -r requirements.txt`.
 3. Uruchom `test_etap1.py`, aby pobrać dane i potwierdzić, że pipeline działa (to normalne, że pobieranie zajmuje ~500 MB i chwilę trwa).
 4. Uruchom `model.py` (lub `test_model.py`), żeby sprawdzić, czy model buduje się poprawnie.
+
+### W Google Colab (szybszy trening dzięki GPU):
+1. Otwórz [Google Colab](https://colab.research.google.com/) i utwórz nowy notebook.
+2. Włącz GPU: **Runtime → Change runtime type → Hardware accelerator: GPU → Save**.
+3. W pierwszej komórce zainstaluj zależności:
+   ```python
+   !pip install kagglehub tensorflow matplotlib scikit-learn pillow numpy
+   ```
+4. Prześlij pliki projektu: kliknij ikonę folderu (📁 Files) po lewej → **Upload to session storage** → wybierz `train.py`, `model.py`, `load_data.py`.
+5. Uruchom trening w nowej komórce:
+   ```python
+   !python /content/train.py
+   ```
+6. Po zakończeniu treningu pobierz wyniki: **Files → models/best_model.h5** (prawym → Download) oraz **plots/training_history.png**.
+   
+**Uwaga:** Trening w Colab na GPU trwa ~5-10 minut (vs ~75 minut na CPU lokalnie). Dane i wyniki są przechowywane tylko podczas sesji Colab.
 
 ## Cel projektu
 Zbudowanie systemu klasyfikacji obrazów flag państw świata używając sieci neuronowych głębokich. Zbiór danych zawiera 195 krajów, po około 1001 obrazów na kraj.
@@ -59,30 +77,46 @@ System zdolny do klasyfikacji flag z dokładnością powyżej 50% na zbiorze tes
 
 ---
 
-## ETAP 3: Trening modelu [WAŻNY]
+## ETAP 3: Trening modelu [ZREALIZOWANY]
 
-### Zadania:
-- Implementacja skryptu treningowego
-- Konfiguracja hiperparametrów:
-  - Learning rate
-  - Batch size (32-64)
-  - Liczba epok (początkowo 20-30)
-- Implementacja callbacks:
-  - ModelCheckpoint - zapisywanie najlepszego modelu
-  - EarlyStopping - zatrzymanie przy braku poprawy
-- Wizualizacja procesu uczenia:
-  - Wykres accuracy (train vs validation)
-  - Wykres loss (train vs validation)
-- Zapis wytrenowanego modelu
+### Zadania wykonane:
+- ✅ Implementacja skryptu treningowego (`train.py`)
+- ✅ Konfiguracja hiperparametrów:
+  - Learning rate: `1e-3` (Adam optimizer)
+  - Batch size: `32`
+  - Maksymalna liczba epok: `30`
+  - EarlyStopping patience: `5`
+  - Liczba próbek na klasę: `50` (dla Colab, można zmienić w `train.py`)
+- ✅ Implementacja callbacks:
+  - **ModelCheckpoint** - zapisywanie najlepszego modelu (`models/best_model.h5`) na podstawie `val_accuracy`
+  - **EarlyStopping** - zatrzymanie przy braku poprawy przez 5 epok, przywrócenie najlepszych wag
+- ✅ Wizualizacja procesu uczenia:
+  - Wykres accuracy (train vs validation) - `plots/training_history.png`
+  - Wykres loss (train vs validation) - `plots/training_history.png`
+- ✅ Zapis wytrenowanego modelu: `models/best_model.h5`
 
-### Pliki do stworzenia:
-- `train.py` - skrypt treningowy
+### Pliki:
+- `train.py` - skrypt treningowy z funkcjami modułowymi
+- `models/best_model.h5` - wytrenowany model (najlepsza wersja)
+- `plots/training_history.png` - wykresy historii treningu
 
-### Kryteria sukcesu:
-- Model trenuje się bez błędów
-- Wykresy pokazują zbieżność
-- Zapisany model `best_model.h5`
-- Wykresy zapisane do pliku
+### Wyniki treningu:
+- **Val accuracy:** 99.57% (epoka 11 - najlepsza)
+- **Train accuracy:** 98.83% (epoka 11)
+- **Liczba epok:** 16 (zatrzymane przez EarlyStopping)
+- **Czas treningu:** ~5-10 minut na GPU (Colab), ~75 minut na CPU (lokalnie)
+- **Zbieżność:** Szybka zbieżność od epoki 4, brak overfittingu
+
+### Parametry użyte w treningu:
+```python
+batch_size=32
+epochs=30
+learning_rate=1e-3
+patience=5
+max_samples_per_class=50  # ~5,850 obrazów (30 na klasę × 195 klas)
+```
+
+### Status: Zakończony
 
 ---
 
@@ -173,4 +207,5 @@ ETAP 5 i 6 są ważne dla jakości projektu, ale MVP można zrealizować bez opt
 
 - ETAP 1: Zakończony
 - ETAP 2: Zakończony
-- ETAP 3-6: W kolejce
+- ETAP 3: Zakończony
+- ETAP 4-6: W kolejce
