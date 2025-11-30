@@ -27,6 +27,8 @@ data/
 *.png
 *.jpg
 *.pdf
+# Wyjątki - pliki które chcemy commitować
+!plots/training_history.png
 
 # Modele zapisane
 *.h5
@@ -34,6 +36,8 @@ data/
 *.pt
 *.pth
 models/
+# Wyjątek - model który chcemy commitować
+!models/best_model.h5
 
 # Logi
 *.log
