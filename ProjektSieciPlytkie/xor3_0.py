@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Dane
 x = np.array([
     [0., 0.],
     [0., 1.],
@@ -20,11 +21,13 @@ assert y_true.shape == (4, 1)
 print(x.shape, y_true.shape, x.dtype)  # test
 
 
+# Parametry
 n_hidden  = 2
 lr        = 0.5
 n_epochs  = 10000
 mse_target = 0.01
 
+# Inicjalizacja wag
 rng = np.random.default_rng()
 W_h = rng.uniform(-0.5, 0.5, size=(n_hidden, x.shape[1]))
 b_h = rng.uniform(-0.5, 0.5, size=(n_hidden, 1))
@@ -44,7 +47,8 @@ def dsigmoid(a):
     return a * (1.0 - a)
 
 
-m = x.shape[0]               # liczba próbek
+# Historia
+m = x.shape[0]
 mse_hist, acc_hist = [], []
 mse_per_sample_hist = []
 W_h_hist, W_o_hist = [], []
@@ -97,7 +101,7 @@ print("\nPrzewidywania po uczeniu:")
 for i in range(x.shape[0]):
     print(f"{x[i]} -> y_hat={y_hat_final[i,0]:.4f}, y={y_cls_final[i,0]}")
 
-
+# Wyniki
 epochs_axis = np.arange(1, len(mse_hist) + 1)
 mse_per_sample_hist = np.array(mse_per_sample_hist)
 W_h_hist = np.array(W_h_hist)

@@ -7,7 +7,7 @@ use_momentum     = True
 use_adaptive_lr  = True
 batch_size       = 2
 
-# --- HIPERPARAMETRY ---
+# Parametry
 n_hidden   = 2
 lr         = 0.5
 lr_min     = 1e-3
@@ -19,7 +19,7 @@ alpha      = 0.9
 n_epochs   = 10000
 mse_target = 0.01
 
-# --- DANE XOR ---
+# Dane
 x = np.array([[0., 0.],
               [0., 1.],
               [1., 0.],
@@ -149,7 +149,7 @@ for ep in range(1, n_epochs + 1):
         print(f"Spełniono próg błędu {mse_target} w epoce {ep}.")
         break
 
-# --- PODSUMOWANIE I WYNIKI ---
+# Wyniki
 mse_per_sample_hist = np.array(mse_per_sample_hist)
 W_h_hist = np.array(W_h_hist)
 W_o_hist = np.array(W_o_hist)
