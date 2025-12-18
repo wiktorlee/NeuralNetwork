@@ -36,3 +36,5 @@ if __name__ == "__main__":
     print("✓ Model przeszedł sanity check (kształt i softmax).")
 
 
+
+

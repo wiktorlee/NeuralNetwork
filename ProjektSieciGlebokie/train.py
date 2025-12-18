@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from load_data import load_flags_dataset
 from model import build_model
@@ -136,10 +137,63 @@ def create_callbacks(models_dir="models", patience=5):
     return callbacks
 
 
-def train_model(model, X_train, y_train, X_val, y_val, 
-                batch_size=32, epochs=30, callbacks=None):
+def create_data_generators(X_train, y_train, X_val, y_val, batch_size=32, use_augmentation=True):
     """
-    Trenuje model.
+    Tworzy generator danych z augmentacją dla treningu.
+    Walidacja używa bezpośrednio tablic (bez generatora) dla stabilności.
+    
+    Args:
+        X_train, y_train: Dane treningowe
+        X_val, y_val: Dane walidacyjne
+        batch_size: Rozmiar batcha
+        use_augmentation: Czy używać augmentacji danych (domyślnie True)
+    
+    Returns:
+        Tuple: (train_generator, validation_data, steps_per_epoch)
+    """
+    if use_augmentation:
+        # Augmentacja dla danych treningowych
+        train_datagen = ImageDataGenerator(
+            rotation_range=10,        # Obrót ±10 stopni
+            width_shift_range=0.1,     # Przesunięcie w poziomie ±10%
+            height_shift_range=0.1,   # Przesunięcie w pionie ±10%
+            brightness_range=[0.8, 1.2],  # Zmiana jasności ±20%
+            zoom_range=0.1,           # Zoom ±10%
+            fill_mode='nearest',      # Wypełnianie pikseli przy transformacjach
+            rescale=1.0               # Dane już są znormalizowane (0-1)
+        )
+        print("✓ Augmentacja danych włączona:")
+        print("  - Obrót: ±10°")
+        print("  - Przesunięcie: ±10%")
+        print("  - Jasność: ±20%")
+        print("  - Zoom: ±10%")
+    else:
+        train_datagen = ImageDataGenerator(rescale=1.0)
+        print("✓ Augmentacja danych wyłączona")
+    
+    # Generator tylko dla treningu (z augmentacją)
+    train_generator = train_datagen.flow(
+        X_train, y_train,
+        batch_size=batch_size,
+        shuffle=True
+    )
+    
+    # Walidacja używa bezpośrednio tablic (bez generatora) - bardziej stabilne
+    validation_data = (X_val, y_val)
+    
+    # Oblicz steps_per_epoch - zaokrąglij w górę, żeby pokryć wszystkie dane
+    steps_per_epoch = (len(X_train) + batch_size - 1) // batch_size
+    
+    print(f"  Steps per epoch: {steps_per_epoch}")
+    print(f"  Validation samples: {len(X_val)}")
+    
+    return train_generator, validation_data, steps_per_epoch
+
+
+def train_model(model, X_train, y_train, X_val, y_val, 
+                batch_size=32, epochs=30, callbacks=None, use_augmentation=True):
+    """
+    Trenuje model z augmentacją danych.
     
     Args:
         model: Model Keras do treningu
@@ -148,6 +202,7 @@ def train_model(model, X_train, y_train, X_val, y_val,
         batch_size: Rozmiar batcha
         epochs: Maksymalna liczba epok
         callbacks: Lista callbacków
+        use_augmentation: Czy używać augmentacji danych (domyślnie True)
     
     Returns:
         Historia treningu (History object)
@@ -160,12 +215,17 @@ def train_model(model, X_train, y_train, X_val, y_val,
     print(f"  Learning rate: {model.optimizer.learning_rate.numpy():.6f}")
     print()
     
+    # Tworzenie generatora danych (tylko dla treningu)
+    train_generator, validation_data, steps_per_epoch = create_data_generators(
+        X_train, y_train, X_val, y_val, batch_size, use_augmentation
+    )
+    
     try:
         history = model.fit(
-            X_train, y_train,
-            batch_size=batch_size,
+            train_generator,
+            steps_per_epoch=steps_per_epoch,
             epochs=epochs,
-            validation_data=(X_val, y_val),
+            validation_data=validation_data,  # Bezpośrednio tablice, nie generator
             callbacks=callbacks,
             verbose=1
         )
@@ -227,10 +287,11 @@ def visualize_history(history, plots_dir="plots"):
 
 def main(
     batch_size=32,
-    epochs=5,
+    epochs=30,
     learning_rate=1e-3,
-    patience=3,
-    max_samples_per_class=10
+    patience=5,
+    max_samples_per_class=100,
+    use_augmentation=True
 ):
     """
     Główna funkcja orkiestrująca proces treningu.
@@ -262,7 +323,8 @@ def main(
             model, X_train, y_train, X_val, y_val,
             batch_size=batch_size,
             epochs=epochs,
-            callbacks=callbacks
+            callbacks=callbacks,
+            use_augmentation=use_augmentation
         )
         
         # 5. Wizualizacja
@@ -285,17 +347,19 @@ def main(
 
 
 if __name__ == "__main__":
-    # Domyślne parametry treningu
+    # ETAP 5: Optymalizacja
+    # - Więcej danych: 100 próbek na klasę (zamiast 50)
+    # - Augmentacja danych: włączona (obrót, przesunięcie, jasność, zoom)
+    # 
     # UWAGA: max_samples_per_class=None wczytuje wszystkie dane (~195k obrazów, ~25GB RAM)
-    # Dla większości komputerów lepiej użyć ograniczenia, np. 50-100 próbek na klasę
+    # Dla większości komputerów lepiej użyć ograniczenia, np. 100-200 próbek na klasę
     # W Colab czasem trzeba zmniejszyć do 50, żeby uniknąć problemów z pamięcią
     main(
         batch_size=32,
         epochs=30,
         learning_rate=1e-3,
         patience=5,
-        max_samples_per_class=50  # 50 próbek na klasę = ~9.75k obrazów (bezpieczne dla Colab)
-        # max_samples_per_class=100  # Możesz zwiększyć jeśli masz więcej RAM
-        # max_samples_per_class=None  # Odkomentuj dla pełnego datasetu (wymaga dużo RAM)
+        max_samples_per_class=75,  # ETAP 5A: 75 próbek na klasę (kompromis między 50 a 100)
+        use_augmentation=False       # ETAP 5B: Augmentacja danych WYŁĄCZONA (test)
     )
 

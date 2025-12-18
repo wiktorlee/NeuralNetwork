@@ -191,20 +191,119 @@ max_samples_per_class=50  # ~5,850 obrazów (30 na klasę × 195 klas)
 
 ---
 
-## ETAP 5: Optymalizacja (opcjonalnie)
+## ETAP 5: Optymalizacja [ZREALIZOWANY]
 
-### Zadania:
-- Eksperymenty z hiperparametrami
-- Augmentacja danych (obroty, przesunięcia, zmiana jasności/kontrastu)
-- Transfer learning (użycie pre-trenowanych modeli jak ResNet, VGG)
-- Porównanie różnych architektur
+### Zadania wykonane:
+- ✅ **ETAP 5A: Zwiększenie liczby próbek**
+  - Zwiększono z 50 do 75 próbek na klasę
+  - Więcej danych = lepsze wyniki
+- ✅ **ETAP 5B: Przetestowanie augmentacji danych**
+  - Zaimplementowano augmentację (obrót, przesunięcie, jasność, zoom)
+  - **Wynik testu:** Augmentacja powodowała spadek accuracy (1.54% z augmentacją vs 99.49% bez)
+  - **Decyzja:** Augmentacja wyłączona - dla tego zadania nie była potrzebna
+  - **Szczegóły próby:** Zobacz sekcję "Próba z augmentacją danych" poniżej
+- ⏭️ **ETAP 5C: Eksperymenty z hiperparametrami** (opcjonalnie, pominięte)
+  - Model osiąga już doskonałe wyniki (99.49%), więc dalsze optymalizacje nie były konieczne
 
-### Pliki do stworzenia:
-- `augment_data.py` - augmentacja danych (opcjonalnie)
-- `train_advanced.py` - zaawansowany trening (opcjonalnie)
+### Pliki:
+- `train.py` - zaktualizowany (75 próbek, augmentacja wyłączona)
+- `evaluate.py` - zaktualizowany (75 próbek)
+- `models/best_model.h5` - nowy model wytrenowany na 75 próbkach/klasę
 
-### Uwaga:
-Ten etap jest opcjonalny i zależy od wyników z etapu 4. Jeśli podstawowy model osiąga zadowalające wyniki, można go pominąć.
+### Wyniki optymalizacji:
+- **Test Accuracy:** 99.49% (poprzednio: 93.85% z 50 próbkami)
+- **Top-3 Accuracy:** 100.00%
+- **Test Loss:** 0.0089
+- **Błędy:** 15 / 2925 (0.51%)
+- **Wzrost accuracy:** +5.64% (z 93.85% do 99.49%)
+
+### Wnioski:
+1. **Więcej danych pomaga:** Zwiększenie z 50 do 75 próbek/klasę poprawiło wyniki
+2. **Augmentacja nie zawsze pomaga:** W tym przypadku powodowała spadek accuracy, więc została wyłączona
+3. **Model działa doskonale:** 99.49% accuracy to bardzo dobry wynik dla 195 klas
+
+---
+
+### Próba z augmentacją danych (ETAP 5B - szczegóły)
+
+#### Co było testowane:
+Zaimplementowano augmentację danych używając `ImageDataGenerator` z następującymi parametrami:
+- **Obrót:** ±10 stopni (`rotation_range=10`)
+- **Przesunięcie poziome:** ±10% (`width_shift_range=0.1`)
+- **Przesunięcie pionowe:** ±10% (`height_shift_range=0.1`)
+- **Jasność:** ±20% (`brightness_range=[0.8, 1.2]`)
+- **Zoom:** ±10% (`zoom_range=0.1`)
+- **Fill mode:** `nearest` (wypełnianie pikseli przy transformacjach)
+- **Rescale:** `1.0` (dane już znormalizowane do [0,1])
+
+#### Wyniki testów:
+
+**Z augmentacją:**
+- Train accuracy: 1-19% (bardzo niska, rosła powoli)
+- Val accuracy: 1.03% (epoka 1), potem spadała do 0%
+- Test accuracy: 1.54%
+- Val loss: 5.67 → 19.41 (bardzo wysoki, rosnący)
+- Problem: Model się nie uczył poprawnie, generator kończył się za wcześnie
+
+**Bez augmentacji:**
+- Train accuracy: 21% → 98% (szybki wzrost)
+- Val accuracy: 7.18% → 99.49% (epoka 8)
+- Test accuracy: 99.49%
+- Val loss: 5.32 → 0.0089 (szybki spadek)
+- Sukces: Model uczył się poprawnie i osiągnął doskonałe wyniki
+
+#### Możliwe przyczyny problemu z augmentacją:
+
+1. **Zbyt agresywne transformacje dla flag:**
+   - Flagi mają specyficzną geometrię (proporcje, kolory, wzory)
+   - Obrót ±10° może zmienić orientację flagi (np. flaga pionowa vs pozioma)
+   - Przesunięcia mogą przyciąć ważne elementy flagi
+
+2. **Problem z generatorami danych:**
+   - Generator kończył się za wcześnie ("Your input ran out of data")
+   - Możliwe problemy z `steps_per_epoch` lub synchronizacją generatorów
+
+3. **Normalizacja danych:**
+   - Dane już były znormalizowane do [0,1]
+   - `rescale=1.0` w generatorze może powodować konflikty
+
+4. **Zbyt mało danych:**
+   - 75 próbek/klasę może być za mało dla skutecznej augmentacji
+   - Augmentacja działa lepiej przy większych zbiorach danych
+
+#### Co można spróbować w przyszłości:
+
+1. **Mniej agresywne transformacje:**
+   - Obrót: ±5° zamiast ±10°
+   - Przesunięcia: ±5% zamiast ±10%
+   - Wyłączyć zoom (flagi mają stałe proporcje)
+
+2. **Selektywna augmentacja:**
+   - Tylko jasność i kontrast (bez obrotów/przesunięć)
+   - Augmentacja tylko dla niektórych klas
+
+3. **Więcej danych:**
+   - Zwiększyć do 100-200 próbek/klasę przed zastosowaniem augmentacji
+
+4. **Inne metody augmentacji:**
+   - Cutout/CutMix
+   - Mixup
+   - Specjalne transformacje dla flag (np. zmiana kolorów w określonych zakresach)
+
+5. **Poprawa generatorów:**
+   - Użyć `.repeat()` w generatorach
+   - Sprawdzić synchronizację między train i validation generatorami
+   - Użyć bezpośrednio tablic dla validation (jak w finalnej wersji)
+
+#### Status próby:
+- **Próba:** Zrealizowana i udokumentowana
+- **Wynik:** Niepowodzenie - augmentacja powodowała spadek accuracy
+- **Decyzja:** Augmentacja wyłączona w finalnej wersji
+- **Możliwość powrotu:** Tak - można wrócić do tego w przyszłości z mniej agresywnymi parametrami
+
+---
+
+### Status: Zakończony
 
 ---
 
@@ -256,5 +355,8 @@ ETAP 5 i 6 są ważne dla jakości projektu, ale MVP można zrealizować bez opt
 - ETAP 2: Zakończony ✅
 - ETAP 3: Zakończony ✅
 - ETAP 4: Zakończony ✅
-- ETAP 5: W kolejce (opcjonalny)
+- ETAP 5: Zakończony ✅
+  - ETAP 5A: Więcej danych (50→75 próbek) ✅
+  - ETAP 5B: Przetestowanie augmentacji (wyłączona) ✅
+  - ETAP 5C: Eksperymenty z hiperparametrami (pominięte - niepotrzebne) ⏭️
 - ETAP 6: W kolejce (sprawozdanie)

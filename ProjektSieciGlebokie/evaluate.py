@@ -472,9 +472,9 @@ def main(model_path="models/best_model.h5", max_samples_per_class=50):
 
 if __name__ == "__main__":
     # UWAGA: max_samples_per_class MUSI być takie samo jak w train.py!
-    # W train.py jest ustawione na 50, więc tutaj też 50
+    # W train.py jest ustawione na 75 (ETAP 5A), więc tutaj też 75
     main(
         model_path="models/best_model.h5",
-        max_samples_per_class=50  # MUSI być takie samo jak w train.py!
+        max_samples_per_class=75  # MUSI być takie samo jak w train.py! (ETAP 5A)
     )
 
