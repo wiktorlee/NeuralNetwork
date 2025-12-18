@@ -1,9 +1,33 @@
 # Etapy projektu - Klasyfikacja flag państw
 
+## Wymagania systemowe
+
+### Wersje oprogramowania:
+- **Python:** 3.11 lub 3.12 (zalecane 3.11 dla lepszej kompatybilności z TensorFlow)
+- **TensorFlow:** >= 2.10.0
+- **NumPy:** >= 1.22.0
+- **Pillow:** >= 9.0.0
+- **scikit-learn:** >= 1.0.0
+- **matplotlib:** >= 3.5.0
+- **seaborn:** >= 0.12.0
+- **kagglehub:** >= 0.3.0
+- **pandas:** >= 1.4.0 (opcjonalne)
+
+**Uwaga:** Python 3.14 nie jest jeszcze wspierany przez TensorFlow. Użyj Python 3.11 lub 3.12.
+
+### Wymagania sprzętowe:
+- **RAM:** Minimum 4GB (zalecane 8GB+)
+- **Dysk:** ~1GB wolnego miejsca (dane + model)
+- **GPU:** Opcjonalne (przyspiesza trening, ale nie jest wymagane)
+
+---
+
 ## Pierwsze uruchomienie – krótkie instrukcje
 
 ### Lokalnie (na własnym komputerze):
-1. Utwórz i aktywuj środowisko: `python -m venv .venv` oraz `.\.venv\Scripts\activate`.
+1. Utwórz i aktywuj środowisko: 
+   - Windows: `py -3.11 -m venv .venv` oraz `.\.venv\Scripts\Activate.ps1`
+   - Linux/Mac: `python3.11 -m venv .venv` oraz `source .venv/bin/activate`
 2. Zainstaluj zależności: `pip install -r requirements.txt`.
 3. Uruchom `test_etap1.py`, aby pobrać dane i potwierdzić, że pipeline działa (to normalne, że pobieranie zajmuje ~500 MB i chwilę trwa).
 4. Uruchom `model.py` (lub `test_model.py`), żeby sprawdzić, czy model buduje się poprawnie.
@@ -120,27 +144,50 @@ max_samples_per_class=50  # ~5,850 obrazów (30 na klasę × 195 klas)
 
 ---
 
-## ETAP 4: Ewaluacja modelu [WAŻNY]
+## ETAP 4: Ewaluacja modelu [ZREALIZOWANY]
 
-### Zadania:
-- Ewaluacja na zbiorze testowym:
+### Zadania wykonane:
+- ✅ Ewaluacja na zbiorze testowym:
   - Obliczenie accuracy i loss
   - Confusion matrix
-- Analiza błędów:
+- ✅ Analiza błędów:
   - Które flagi są najtrudniejsze do rozpoznania
   - Przykłady błędnych klasyfikacji
   - Wizualizacja confusion matrix
-- Obliczenie metryk szczegółowych:
+- ✅ Obliczenie metryk szczegółowych:
   - Precision, Recall, F1-score per class
-  - Top-3 accuracy (opcjonalnie)
+  - Top-3 accuracy
 
-### Pliki do stworzenia:
+### Pliki:
 - `evaluate.py` - skrypt ewaluacji
+- `plots/confusion_matrix_top_classes.png` - wizualizacja confusion matrix (top 50 klas)
+- `plots/confusion_matrix.txt` - surowe dane confusion matrix
+- `plots/error_analysis.txt` - analiza najtrudniejszych klas
+- `plots/error_examples.png` - przykłady błędnych klasyfikacji
+- `plots/classification_report.txt` - szczegółowy raport z metrykami per class
 
-### Kryteria sukcesu:
-- Raport z dokładnością na testach
-- Confusion matrix wygenerowana
-- Zidentyfikowane problematyczne klasy
+### Wyniki ewaluacji:
+- **Test Accuracy:** 93.85%
+- **Test Loss:** 1.47
+- **Top-3 Accuracy:** 94.36%
+- **Liczba błędów:** 120 / 1950 (6.15%)
+- **Metryki ogólne (macro average):**
+  - Precision: 93.59%
+  - Recall: 93.85%
+  - F1-score: 93.68%
+- **Metryki ogólne (weighted average):**
+  - Precision: 93.59%
+  - Recall: 93.85%
+  - F1-score: 93.68%
+
+### Obserwacje:
+- Model osiąga 93.85% accuracy na zbiorze testowym
+- Dla top 50 klas (najczęściej występujących) accuracy wynosi 100%
+- Główne problemy: podobne flagi są mylone (np. Chad-Romania, Dominican Republic-DRC)
+- Wiele klas z 100% błędów wynika z małej liczby próbek w test set (10 próbek na klasę)
+- Model jest bardzo pewny swoich predykcji, nawet przy błędach (pewność 87-100%)
+
+### Status: Zakończony
 
 ---
 
@@ -205,7 +252,9 @@ ETAP 5 i 6 są ważne dla jakości projektu, ale MVP można zrealizować bez opt
 
 ## Aktualny status
 
-- ETAP 1: Zakończony
-- ETAP 2: Zakończony
-- ETAP 3: Zakończony
-- ETAP 4-6: W kolejce
+- ETAP 1: Zakończony ✅
+- ETAP 2: Zakończony ✅
+- ETAP 3: Zakończony ✅
+- ETAP 4: Zakończony ✅
+- ETAP 5: W kolejce (opcjonalny)
+- ETAP 6: W kolejce (sprawozdanie)

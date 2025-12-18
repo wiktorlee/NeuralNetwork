@@ -14,6 +14,7 @@ tensorflow>=2.10.0
 
 # Biblioteki do wizualizacji
 matplotlib>=3.5.0
+seaborn>=0.12.0
 
 # Opcjonalne - przydatne do analizy danych
 pandas>=1.4.0

@@ -1,0 +1,21 @@
+ANALIZA BŁĘDÓW KLASYFIKACJI
+======================================================================
+
+Liczba błędnych klasyfikacji: 120 / 1950 (6.15%)
+
+Top 20 najtrudniejszych klas:
+----------------------------------------------------------------------
+Klasa                          Błędy      % błędów       
+----------------------------------------------------------------------
+Dominica                       10         100.00%
+Chad                           10         100.00%
+CAR                            10         100.00%
+DPRK                           10         100.00%
+Canada                         10         100.00%
+Cambodia                       10         100.00%
+Denmark                        10         100.00%
+Cabo Verde                     10         100.00%
+Djibouti                       10         100.00%
+Dominican Republic             10         100.00%
+Cameroon                       10         100.00%
+DRC                            10         100.00%
