@@ -27,8 +27,8 @@ data/
 *.png
 *.jpg
 *.pdf
-# Wyjątki - pliki które chcemy commitować
-!plots/training_history.png
+# Wyjątki - wszystkie wykresy z folderu plots/ chcemy commitować
+!plots/*.png
 
 # Modele zapisane
 *.h5
