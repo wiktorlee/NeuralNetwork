@@ -22,7 +22,257 @@
 
 ---
 
-## Pierwsze uruchomienie – krótkie instrukcje
+## 🚀 INSTRUKCJA URUCHOMIENIA - KROK PO KROKU
+
+### ⚠️ WAŻNE: Przeczytaj przed rozpoczęciem!
+
+**Dla osób uruchamiających projekt po raz pierwszy:** Ta sekcja zawiera wszystkie kroki potrzebne do uruchomienia projektu od zera. Postępuj dokładnie krok po kroku.
+
+---
+
+### 📋 Wymagane pliki do uruchomienia:
+
+Musisz mieć następujące pliki w projekcie:
+- ✅ `train.py` - skrypt treningowy
+- ✅ `evaluate.py` - skrypt ewaluacji (WAŻNE - nie zapomnij!)
+- ✅ `model.py` - definicja modelu CNN
+- ✅ `load_data.py` - wczytywanie i preprocessing danych
+- ✅ `requirements.txt` - lista zależności (opcjonalne, ale pomocne)
+
+### 🎯 Ważna informacja o gotowym modelu:
+
+**✅ Gotowy model jest już w repozytorium!**
+
+W folderze `models/` znajduje się już wytrenowany model `best_model.h5` (accuracy: 98.97%), który jest commitowany do repo.
+
+**Oznacza to, że:**
+- Możesz od razu uruchomić `evaluate.py` bez treningu (jeśli chcesz tylko zobaczyć wyniki)
+- Albo możesz wytrenować własny model używając `train.py` (nadpisze istniejący model)
+- Model jest gotowy do użycia i nie wymaga treningu
+
+**Jeśli chcesz tylko zobaczyć wyniki bez treningu:**
+- Pomiń Krok 4 (trening) i przejdź od razu do Kroku 5 (ewaluacja)
+- Model `models/best_model.h5` jest już dostępny w repo
+
+---
+
+### 🖥️ Opcja 1: Uruchomienie w Google Colab (ZALECANE - szybsze dzięki GPU)
+
+#### Krok 1: Przygotowanie środowiska Colab
+1. Otwórz [Google Colab](https://colab.research.google.com/)
+2. Utwórz nowy notebook: **File → New notebook**
+3. **WAŻNE:** Włącz GPU: **Runtime → Change runtime type → Hardware accelerator: GPU → Save**
+   - Bez GPU trening będzie trwał ~75 minut, z GPU ~5-10 minut
+
+#### Krok 2: Instalacja zależności
+W pierwszej komórce notebooka uruchom:
+```python
+!pip install kagglehub tensorflow matplotlib scikit-learn pillow numpy seaborn
+```
+**Uwaga:** Instalacja może chwilę potrwać. Poczekaj aż zakończy się (✓).
+
+#### Krok 3: Upload plików projektu
+**WAŻNE:** Musisz wgrać WSZYSTKIE 4 pliki:
+1. Kliknij ikonę folderu (📁 Files) po lewej stronie
+2. Kliknij **Upload to session storage**
+3. Wybierz i wgraj następujące pliki:
+   - ✅ `train.py`
+   - ✅ `evaluate.py` ← **NIE ZAPOMNIJ TEGO!**
+   - ✅ `model.py`
+   - ✅ `load_data.py`
+
+**Uwaga:** Pliki muszą być w folderze `/content/` w Colab. Sprawdź czy wszystkie 4 pliki są widoczne w panelu Files.
+
+#### Krok 4: Uruchomienie treningu (OPCJONALNE)
+
+**ℹ️ UWAGA:** Jeśli chcesz tylko zobaczyć wyniki, możesz pominąć ten krok! Gotowy model `models/best_model.h5` jest już w repo i możesz od razu przejść do Kroku 5 (ewaluacja).
+
+Jeśli chcesz wytrenować własny model (lub nadpisać istniejący), uruchom:
+```python
+!python /content/train.py
+```
+
+**Co się dzieje podczas treningu:**
+- Pobieranie danych z Kaggle (~500 MB, może chwilę potrwać)
+- Wczytywanie i preprocessing obrazów (14,625 obrazów)
+- Budowa modelu CNN (5.3M parametrów)
+- Trening modelu (11 epok, ~5-10 minut na GPU)
+- Generowanie wykresów treningowych (6 wykresów)
+
+**Oczekiwany wynik:**
+- Model zapisany: `models/best_model.h5`
+- Najlepsza val_accuracy: ~98.97% (epoka 6)
+- 6 wykresów w folderze `plots/`:
+  - `training_history.png` - accuracy i loss
+  - `classification_error.png` - błąd klasyfikacji
+  - `learning_rate_evolution.png` - ewolucja LR
+  - `loss_per_class.png` - loss per class
+  - `weight_trajectories.png` - trajektorie wag
+  - `gradient_norms.png` - normy gradientów
+
+#### Krok 5: Uruchomienie ewaluacji
+**WAŻNE:** Po zakończeniu treningu uruchom ewaluację w nowej komórce:
+```python
+!python /content/evaluate.py
+```
+
+**Co się dzieje podczas ewaluacji:**
+- Wczytywanie modelu `models/best_model.h5`
+- Ewaluacja na zbiorze testowym (2,925 obrazów)
+- Generowanie wykresów ewaluacyjnych (9 wykresów)
+- Generowanie raportów tekstowych (3 pliki .txt)
+
+**Oczekiwany wynik:**
+- Test Accuracy: ~98.97%
+- Top-3 Accuracy: 100.00%
+- 9 wykresów w folderze `plots/`:
+  - `confusion_matrix_top_classes.png`
+  - `error_examples.png`
+  - `top_n_accuracy.png`
+  - `confidence_distribution.png`
+  - `precision_recall_per_class.png`
+  - `error_confusion_matrix.png`
+  - (i inne)
+- 3 pliki tekstowe z wynikami:
+  - `classification_report.txt` - szczegółowe metryki
+  - `error_analysis.txt` - analiza błędów
+  - `confusion_matrix.txt` - surowe dane
+
+#### Krok 6: Pobieranie wyników
+Po zakończeniu treningu i ewaluacji:
+
+1. **Pobierz model:**
+   - Files → `models/best_model.h5` → prawy przycisk → Download
+
+2. **Pobierz wszystkie wykresy:**
+   - Files → `plots/` → zaznacz wszystkie pliki PNG → Download
+   - Powinno być 15 wykresów (6 z treningu + 9 z ewaluacji)
+
+3. **Pobierz raporty tekstowe:**
+   - Files → `plots/` → zaznacz pliki `.txt` → Download
+   - Powinno być 3 pliki tekstowe
+
+**⚠️ UWAGA:** Dane w Colab są przechowywane tylko podczas sesji. Po zamknięciu notebooka wszystko znika! Pobierz wyniki przed zamknięciem.
+
+---
+
+### 💻 Opcja 2: Uruchomienie lokalnie (na własnym komputerze)
+
+#### Krok 1: Przygotowanie środowiska
+1. Utwórz i aktywuj środowisko wirtualne:
+   - **Windows:** 
+     ```powershell
+     py -3.11 -m venv .venv
+     .\.venv\Scripts\Activate.ps1
+     ```
+   - **Linux/Mac:**
+     ```bash
+     python3.11 -m venv .venv
+     source .venv/bin/activate
+     ```
+
+2. Zainstaluj zależności:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   Lub ręcznie:
+   ```bash
+   pip install kagglehub tensorflow matplotlib scikit-learn pillow numpy seaborn
+   ```
+
+#### Krok 2: Weryfikacja środowiska
+Uruchom testy, aby sprawdzić czy wszystko działa:
+```bash
+python test_etap1.py    # Test pobierania danych
+python model.py         # Test budowy modelu
+```
+
+#### Krok 3: Trening modelu (OPCJONALNE)
+
+**ℹ️ UWAGA:** Jeśli chcesz tylko zobaczyć wyniki, możesz pominąć ten krok! Gotowy model `models/best_model.h5` jest już w repo i możesz od razu przejść do Kroku 4 (ewaluacja).
+
+Jeśli chcesz wytrenować własny model (lub nadpisać istniejący):
+```bash
+python train.py
+```
+
+**Czas treningu:** ~75 minut na CPU (bez GPU), ~5-10 minut z GPU
+
+#### Krok 4: Ewaluacja modelu
+```bash
+python evaluate.py
+```
+
+**Wyniki:** Wszystkie pliki zostaną zapisane w folderze `plots/` i `models/`
+
+---
+
+### 📊 Podsumowanie wygenerowanych plików
+
+Po pełnym uruchomieniu (trening + ewaluacja) powinieneś mieć:
+
+**W folderze `models/`:**
+- ✅ `best_model.h5` - wytrenowany model
+  - **ℹ️ UWAGA:** Ten model jest już commitowany do repo! Jeśli nie trenujesz własnego modelu, użyjesz gotowego modelu z repo (accuracy: 98.97%)
+
+**W folderze `plots/` - wykresy treningowe (6 plików):**
+- ✅ `training_history.png` - accuracy i loss przez epoki
+- ✅ `classification_error.png` - błąd klasyfikacji (1-accuracy)
+- ✅ `learning_rate_evolution.png` - ewolucja learning rate
+- ✅ `loss_per_class.png` - loss dla wybranych klas
+- ✅ `weight_trajectories.png` - trajektorie wag warstwy wyjściowej
+- ✅ `gradient_norms.png` - normy gradientów przez epoki
+
+**W folderze `plots/` - wykresy ewaluacyjne (9 plików):**
+- ✅ `confusion_matrix_top_classes.png` - confusion matrix (top 50 klas)
+- ✅ `error_examples.png` - przykłady błędnych klasyfikacji
+- ✅ `top_n_accuracy.png` - Top-N accuracy (N=1-5)
+- ✅ `confidence_distribution.png` - rozkład pewności modelu
+- ✅ `precision_recall_per_class.png` - Precision/Recall per class
+- ✅ `error_confusion_matrix.png` - pary klas najczęściej mylonych
+- (i inne)
+
+**W folderze `plots/` - raporty tekstowe (3 pliki):**
+- ✅ `classification_report.txt` - szczegółowe metryki per class
+- ✅ `error_analysis.txt` - analiza najtrudniejszych klas
+- ✅ `confusion_matrix.txt` - surowe dane confusion matrix
+
+**Łącznie: 1 model + 15 wykresów + 3 raporty = 19 plików wynikowych**
+
+---
+
+### ⚠️ Częste problemy i rozwiązania
+
+**Problem 1: "ModuleNotFoundError: No module named 'seaborn'"**
+- **Rozwiązanie:** Dodaj `seaborn` do instalacji: `!pip install seaborn`
+
+**Problem 2: "Model nie znaleziony" podczas ewaluacji**
+- **Rozwiązanie:** Upewnij się, że najpierw uruchomiłeś `train.py` i model został zapisany
+
+**Problem 3: "max_samples_per_class mismatch"**
+- **Rozwiązanie:** Upewnij się, że w `train.py` i `evaluate.py` jest ta sama wartość (obecnie 75)
+
+**Problem 4: Trening trwa bardzo długo**
+- **Rozwiązanie:** Użyj GPU w Colab (Runtime → Change runtime type → GPU)
+
+**Problem 5: Brakuje niektórych wykresów**
+- **Rozwiązanie:** Upewnij się, że uruchomiłeś zarówno `train.py` (6 wykresów) jak i `evaluate.py` (9 wykresów)
+
+---
+
+### 📝 Notatki dla kolegów
+
+- **Gotowy model w repo:** Model `models/best_model.h5` jest już commitowany - możesz użyć go bez treningu!
+- **Opcjonalny trening:** Jeśli chcesz wytrenować własny model, uruchom `train.py` (nadpisze istniejący model)
+- **Ewaluacja bez treningu:** Możesz od razu uruchomić `evaluate.py` używając gotowego modelu z repo
+- **Nie modyfikuj** `max_samples_per_class` bez aktualizacji w obu plikach (`train.py` i `evaluate.py`)
+- **Jeśli trenujesz:** Zawsze uruchamiaj najpierw `train.py`, potem `evaluate.py`
+- **Pobierz wszystkie pliki** z Colab przed zamknięciem sesji
+- **Sprawdź** czy wszystkie 4 pliki są w Colab przed uruchomieniem
+
+---
+
+## Pierwsze uruchomienie – krótkie instrukcje (stara sekcja)
 
 ### Lokalnie (na własnym komputerze):
 1. Utwórz i aktywuj środowisko: 
@@ -32,21 +282,7 @@
 3. Uruchom `test_etap1.py`, aby pobrać dane i potwierdzić, że pipeline działa (to normalne, że pobieranie zajmuje ~500 MB i chwilę trwa).
 4. Uruchom `model.py` (lub `test_model.py`), żeby sprawdzić, czy model buduje się poprawnie.
 
-### W Google Colab (szybszy trening dzięki GPU):
-1. Otwórz [Google Colab](https://colab.research.google.com/) i utwórz nowy notebook.
-2. Włącz GPU: **Runtime → Change runtime type → Hardware accelerator: GPU → Save**.
-3. W pierwszej komórce zainstaluj zależności:
-   ```python
-   !pip install kagglehub tensorflow matplotlib scikit-learn pillow numpy
-   ```
-4. Prześlij pliki projektu: kliknij ikonę folderu (📁 Files) po lewej → **Upload to session storage** → wybierz `train.py`, `model.py`, `load_data.py`.
-5. Uruchom trening w nowej komórce:
-   ```python
-   !python /content/train.py
-   ```
-6. Po zakończeniu treningu pobierz wyniki: **Files → models/best_model.h5** (prawym → Download) oraz **plots/training_history.png**.
-   
-**Uwaga:** Trening w Colab na GPU trwa ~5-10 minut (vs ~75 minut na CPU lokalnie). Dane i wyniki są przechowywane tylko podczas sesji Colab.
+*(Zobacz sekcję "🚀 INSTRUKCJA URUCHOMIENIA - KROK PO KROKU" powyżej dla szczegółowych instrukcji)*
 
 ## Cel projektu
 Zbudowanie systemu klasyfikacji obrazów flag państw świata używając sieci neuronowych głębokich. Zbiór danych zawiera 195 krajów, po około 1001 obrazów na kraj.
@@ -106,38 +342,51 @@ System zdolny do klasyfikacji flag z dokładnością powyżej 50% na zbiorze tes
 ### Zadania wykonane:
 - ✅ Implementacja skryptu treningowego (`train.py`)
 - ✅ Konfiguracja hiperparametrów:
-  - Learning rate: `1e-3` (Adam optimizer)
+  - Learning rate: `1e-3` (Adam optimizer) z **ReduceLROnPlateau** scheduler
   - Batch size: `32`
   - Maksymalna liczba epok: `30`
   - EarlyStopping patience: `5`
-  - Liczba próbek na klasę: `50` (dla Colab, można zmienić w `train.py`)
+  - Liczba próbek na klasę: `75` (zwiększone z 50 dla lepszych wyników)
 - ✅ Implementacja callbacks:
   - **ModelCheckpoint** - zapisywanie najlepszego modelu (`models/best_model.h5`) na podstawie `val_accuracy`
   - **EarlyStopping** - zatrzymanie przy braku poprawy przez 5 epok, przywrócenie najlepszych wag
-- ✅ Wizualizacja procesu uczenia:
-  - Wykres accuracy (train vs validation) - `plots/training_history.png`
-  - Wykres loss (train vs validation) - `plots/training_history.png`
+  - **ReduceLROnPlateau** - automatyczne zmniejszanie learning rate (factor=0.5, patience=3, min_lr=1e-6)
+  - **TrainingMetricsCallback** - custom callback do zbierania metryk analitycznych
+- ✅ Wizualizacja procesu uczenia (6 wykresów):
+  - `training_history.png` - accuracy i loss (train vs validation)
+  - `classification_error.png` - błąd klasyfikacji (1-accuracy)
+  - `learning_rate_evolution.png` - ewolucja learning rate przez epoki
+  - `loss_per_class.png` - loss dla wybranych klas przez epoki
+  - `weight_trajectories.png` - trajektorie wag warstwy wyjściowej
+  - `gradient_norms.png` - normy gradientów przez epoki
 - ✅ Zapis wytrenowanego modelu: `models/best_model.h5`
 
 ### Pliki:
 - `train.py` - skrypt treningowy z funkcjami modułowymi
 - `models/best_model.h5` - wytrenowany model (najlepsza wersja)
 - `plots/training_history.png` - wykresy historii treningu
+- `plots/classification_error.png` - błąd klasyfikacji
+- `plots/learning_rate_evolution.png` - ewolucja learning rate
+- `plots/loss_per_class.png` - loss per class
+- `plots/weight_trajectories.png` - trajektorie wag
+- `plots/gradient_norms.png` - normy gradientów
 
-### Wyniki treningu:
-- **Val accuracy:** 99.57% (epoka 11 - najlepsza)
-- **Train accuracy:** 98.83% (epoka 11)
-- **Liczba epok:** 16 (zatrzymane przez EarlyStopping)
+### Wyniki treningu (aktualne):
+- **Val accuracy:** 98.97% (epoka 6 - najlepsza)
+- **Train accuracy:** ~97% (epoka 6)
+- **Liczba epok:** 11 (zatrzymane przez EarlyStopping)
 - **Czas treningu:** ~5-10 minut na GPU (Colab), ~75 minut na CPU (lokalnie)
-- **Zbieżność:** Szybka zbieżność od epoki 4, brak overfittingu
+- **Zbieżność:** Szybka zbieżność od epoki 2-3, brak overfittingu
+- **Learning Rate:** Zmniejszony z 0.001 do 0.0005 w epoce 9 (ReduceLROnPlateau)
 
 ### Parametry użyte w treningu:
 ```python
 batch_size=32
 epochs=30
-learning_rate=1e-3
+learning_rate=1e-3  # z ReduceLROnPlateau scheduler
 patience=5
-max_samples_per_class=50  # ~5,850 obrazów (30 na klasę × 195 klas)
+max_samples_per_class=75  # 14,625 obrazów (75 na klasę × 195 klas)
+use_augmentation=False  # wyłączona (testy pokazały spadek accuracy)
 ```
 
 ### Status: Zakończony
@@ -160,32 +409,47 @@ max_samples_per_class=50  # ~5,850 obrazów (30 na klasę × 195 klas)
 
 ### Pliki:
 - `evaluate.py` - skrypt ewaluacji
-- `plots/confusion_matrix_top_classes.png` - wizualizacja confusion matrix (top 50 klas)
-- `plots/confusion_matrix.txt` - surowe dane confusion matrix
-- `plots/error_analysis.txt` - analiza najtrudniejszych klas
-- `plots/error_examples.png` - przykłady błędnych klasyfikacji
-- `plots/classification_report.txt` - szczegółowy raport z metrykami per class
+- **Wykresy ewaluacyjne (9 plików):**
+  - `confusion_matrix_top_classes.png` - wizualizacja confusion matrix (top 50 klas)
+  - `error_examples.png` - przykłady błędnych klasyfikacji
+  - `top_n_accuracy.png` - Top-N accuracy (N=1-5)
+  - `confidence_distribution.png` - rozkład pewności modelu (poprawne vs błędne)
+  - `precision_recall_per_class.png` - Precision/Recall per class (top 30 najtrudniejszych)
+  - `error_confusion_matrix.png` - pary klas najczęściej mylonych
+  - (i inne)
+- **Raporty tekstowe (3 pliki):**
+  - `confusion_matrix.txt` - surowe dane confusion matrix
+  - `error_analysis.txt` - analiza najtrudniejszych klas
+  - `classification_report.txt` - szczegółowy raport z metrykami per class
 
-### Wyniki ewaluacji:
-- **Test Accuracy:** 93.85%
-- **Test Loss:** 1.47
-- **Top-3 Accuracy:** 94.36%
-- **Liczba błędów:** 120 / 1950 (6.15%)
+### Wyniki ewaluacji (aktualne):
+- **Test Accuracy:** 98.97%
+- **Test Loss:** 0.0264
+- **Top-1 Accuracy:** 98.97%
+- **Top-2 Accuracy:** 100.00% ⭐
+- **Top-3 Accuracy:** 100.00%
+- **Liczba błędów:** 30 / 2925 (1.03%)
 - **Metryki ogólne (macro average):**
-  - Precision: 93.59%
-  - Recall: 93.85%
-  - F1-score: 93.68%
+  - Precision: 98.46%
+  - Recall: 98.97%
+  - F1-score: 98.63%
 - **Metryki ogólne (weighted average):**
-  - Precision: 93.59%
-  - Recall: 93.85%
-  - F1-score: 93.68%
+  - Precision: 98.46%
+  - Recall: 98.97%
+  - F1-score: 98.63%
 
 ### Obserwacje:
-- Model osiąga 93.85% accuracy na zbiorze testowym
+- Model osiąga **98.97% accuracy** na zbiorze testowym (bardzo dobry wynik!)
+- **Top-2 accuracy: 100%** - prawidłowa odpowiedź jest zawsze w top 2 predykcji
 - Dla top 50 klas (najczęściej występujących) accuracy wynosi 100%
-- Główne problemy: podobne flagi są mylone (np. Chad-Romania, Dominican Republic-DRC)
-- Wiele klas z 100% błędów wynika z małej liczby próbek w test set (10 próbek na klasę)
-- Model jest bardzo pewny swoich predykcji, nawet przy błędach (pewność 87-100%)
+- **Główne problemy:** Tylko 2 pary klas są mylone:
+  - Chad → Romania (15 błędów, 100% błędów dla Chad)
+  - Indonesia → Monaco (15 błędów, 100% błędów dla Indonesia)
+- **Dlaczego te błędy?** Flagi są wizualnie niemal identyczne:
+  - Chad vs Romania: Różnią się tylko odcieniem niebieskiego
+  - Indonesia vs Monaco: Identyczne flagi (różne tylko proporcje)
+- **Pewność modelu:** Model ma niską pewność (~51-56%) przy błędach, co wskazuje na świadomość niepewności
+- **193 z 195 klas:** Mają 100% accuracy (perfekcyjna klasyfikacja)
 
 ### Status: Zakończony
 
@@ -210,17 +474,25 @@ max_samples_per_class=50  # ~5,850 obrazów (30 na klasę × 195 klas)
 - `evaluate.py` - zaktualizowany (75 próbek)
 - `models/best_model.h5` - nowy model wytrenowany na 75 próbkach/klasę
 
-### Wyniki optymalizacji:
-- **Test Accuracy:** 99.49% (poprzednio: 93.85% z 50 próbkami)
+### Wyniki optymalizacji (finalne):
+- **Test Accuracy:** 98.97% (poprzednio: 93.85% z 50 próbkami)
+- **Top-2 Accuracy:** 100.00% ⭐
 - **Top-3 Accuracy:** 100.00%
-- **Test Loss:** 0.0089
-- **Błędy:** 15 / 2925 (0.51%)
-- **Wzrost accuracy:** +5.64% (z 93.85% do 99.49%)
+- **Test Loss:** 0.0264
+- **Błędy:** 30 / 2925 (1.03%)
+- **Wzrost accuracy:** +5.12% (z 93.85% do 98.97%)
+- **Dodatkowe ulepszenia:**
+  - Learning Rate Scheduler (ReduceLROnPlateau) - automatyczna optymalizacja LR
+  - 6 wykresów analitycznych z treningu (obserwacja procesu uczenia)
+  - 9 wykresów analitycznych z ewaluacji (szczegółowa analiza wyników)
 
 ### Wnioski:
-1. **Więcej danych pomaga:** Zwiększenie z 50 do 75 próbek/klasę poprawiło wyniki
+1. **Więcej danych pomaga:** Zwiększenie z 50 do 75 próbek/klasę poprawiło wyniki (+5.12%)
 2. **Augmentacja nie zawsze pomaga:** W tym przypadku powodowała spadek accuracy, więc została wyłączona
-3. **Model działa doskonale:** 99.49% accuracy to bardzo dobry wynik dla 195 klas
+3. **Learning Rate Scheduler pomaga:** ReduceLROnPlateau automatycznie optymalizuje learning rate podczas treningu
+4. **Model działa doskonale:** 98.97% accuracy to bardzo dobry wynik dla 195 klas
+5. **Top-2 accuracy 100%:** Nawet gdy model się myli, prawidłowa odpowiedź jest zawsze w top 2 predykcji
+6. **Błędy są przewidywalne:** Wszystkie błędy dotyczą wizualnie bardzo podobnych flag (Chad-Romania, Indonesia-Monaco)
 
 ---
 
