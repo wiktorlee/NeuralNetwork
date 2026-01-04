@@ -83,7 +83,7 @@ Honduras                       1.0000       1.0000       1.0000       15
 Hungary                        1.0000       1.0000       1.0000       15        
 Iceland                        1.0000       1.0000       1.0000       15        
 India                          1.0000       1.0000       1.0000       15        
-Indonesia                      1.0000       1.0000       1.0000       15        
+Indonesia                      0.0000       0.0000       0.0000       15        
 Iran                           1.0000       1.0000       1.0000       15        
 Iraq                           1.0000       1.0000       1.0000       15        
 Ireland                        1.0000       1.0000       1.0000       15        
@@ -119,7 +119,7 @@ Mauritius                      1.0000       1.0000       1.0000       15
 Mexico                         1.0000       1.0000       1.0000       15        
 Micronesia                     1.0000       1.0000       1.0000       15        
 Moldova                        1.0000       1.0000       1.0000       15        
-Monaco                         1.0000       1.0000       1.0000       15        
+Monaco                         0.5000       1.0000       0.6667       15        
 Mongolia                       1.0000       1.0000       1.0000       15        
 Montenegro                     1.0000       1.0000       1.0000       15        
 Morocco                        1.0000       1.0000       1.0000       15        
@@ -204,10 +204,10 @@ Zimbabwe                       1.0000       1.0000       1.0000       15
 ----------------------------------------------------------------------
 METRYKI OGÓLNE:
 ----------------------------------------------------------------------
-Accuracy:           0.9949
-Macro avg Precision: 0.9923
-Macro avg Recall:    0.9949
-Macro avg F1-score:  0.9932
-Weighted avg Precision: 0.9923
-Weighted avg Recall:    0.9949
-Weighted avg F1-score:  0.9932
+Accuracy:           0.9897
+Macro avg Precision: 0.9846
+Macro avg Recall:    0.9897
+Macro avg F1-score:  0.9863
+Weighted avg Precision: 0.9846
+Weighted avg Recall:    0.9897
+Weighted avg F1-score:  0.9863
